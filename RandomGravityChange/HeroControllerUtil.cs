@@ -11,6 +11,7 @@ public static class HeroControllerUtil
 
     static HeroControllerUtil()
     {
+        //front load the cost of doing this
         FieldInfo[] fieldInfos = typeof(HeroController).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         foreach (var fieldinfo in fieldInfos)
         {
@@ -88,6 +89,10 @@ public static class HeroControllerUtil
     {
         return self.CallMethod<object>(name, parameters);
     }
+    public static object CallMethod(this HeroController self, string name)
+    {
+        return self.CallMethod<object>(name, null);
+    }
     public static T CallMethod<T>(this HeroController self, string name, object[] parameters)
     {
         if (HCMethods.TryGetValue(name, out MethodInfo FoundmethodInfo))
@@ -102,7 +107,12 @@ public static class HeroControllerUtil
             return (T) methodInfo.Invoke(self, parameters);
         }
     }
-    
+
+    public static T CallMethod<T>(this HeroController self, string name)
+    {
+        return self.CallMethod<T>(name, null);
+    }
+
     public static bool RelativeYComparison(this float y_velocity, bool isUpsideDown, float comparison = 0.0f)
     {
         return !isUpsideDown && y_velocity > comparison || isUpsideDown && y_velocity < comparison * -1f;

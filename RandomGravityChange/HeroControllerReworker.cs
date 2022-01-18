@@ -1,115 +1,96 @@
-﻿using System.Linq;
-using UnityEngine.SceneManagement;
+﻿namespace RandomGravityChange;
 
-namespace RandomGravityChange;
-public class GravityChanger : MonoBehaviour
+public class HeroControllerReworker
 {
-	private bool isUpsideDown = false;
-	private HeroController HC = null;
-	private Rigidbody2D rb2d = null;
-	private InputHandler Ih = null;
-	private Collider2D col2d = null;
-
-	public void OnEnable()
-	{
-		Log("Enabling Component");
-		HC = gameObject.GetComponent<HeroController>();
-		rb2d = gameObject.GetComponent<Rigidbody2D>();
-		Ih = HC.Get<InputHandler>("inputHandler");
-		col2d = HC.Get<Collider2D>("col2d");
-	}
-
-	public void Start()
-	{
-		On.HeroController.FixedUpdate += OnHeroControllerFixedUpdate;
-		On.HeroController.CancelHeroJump += OnHeroControllerCancelHeroJump;
-		On.HeroController.CanDreamNail += OnHeroControllerCanDreamNail;
-		On.HeroController.FallCheck += OnHeroControllerFallCheck;
-		On.HeroController.JumpReleased += OnHeroControllerJumpReleased;
-		On.HeroController.CheckForBump += OnHeroControllerCheckForBump;
-		On.HeroController.CheckNearRoof += OnHeroControllerCheckNearRoof;
-		On.HeroController.CheckTouchingGround += OnHeroControllerCheckTouchingGround;
-		USceneManager.activeSceneChanged += SceneChangeFlipEnemies;
-	}
-
-	private void SceneChangeFlipEnemies(Scene arg0, Scene arg1)
-	{
-		StartCoroutine(StartFlippingEnemies());
-	}
-
-	private IEnumerator StartFlippingEnemies()
-	{
-		yield return new WaitForFinishedEnteringScene();
-		yield return null;yield return null;yield return null;
-		FlipEnemies(true);
-	}
-
-	private void FlipEnemies(bool NewScene)
-	{
-		foreach (GameObject go in FindObjectsOfType(typeof(HealthManager)).Select(hm => ((HealthManager)hm).gameObject))
-		{
-			Vector3 tmpVec3 = go.transform.localScale;
-			float factor = !NewScene ? -1f : isUpsideDown ? -1f : 1f; 
-			tmpVec3.y *= factor;
-			go.transform.localScale = tmpVec3;
-		}
-	}
-
-	public void OnDisable()
-	{
-		HC = null;
-		rb2d = null;
-		Ih = null;
-		col2d = null;
-	}
-	public void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.R))
-		{
-			isUpsideDown = !isUpsideDown;
-			Switch(isUpsideDown);
-		}
-	}
-
-	private void Switch(bool nowState)
-	{
-		HC.Set("BUMP_VELOCITY", HC.Get<float>("BUMP_VELOCITY") * -1);
-		HC.BOUNCE_VELOCITY *= -1;
-		HC.WALLSLIDE_DECEL *= -1;
-		HC.WALLSLIDE_SPEED *= -1;
-		HC.SWIM_ACCEL *= -1;
-		HC.SWIM_MAX_SPEED *= -1;
-		HC.JUMP_SPEED_UNDERWATER *= -1;
-		HC.JUMP_SPEED *= -1;
-		HC.SHROOM_BOUNCE_VELOCITY *= -1;
-		HC.RECOIL_DOWN_VELOCITY *= -1;
-		HC.MAX_FALL_VELOCITY *= -1;
-		HC.MAX_FALL_VELOCITY_UNDERWATER *= -1;
-		Physics2D.gravity *= -1;
-		Vector3 tmpVec3 = gameObject.transform.localScale;
-		tmpVec3.y *= -1;
-		gameObject.transform.localScale = tmpVec3;
-		FlipEnemies(false);
-	}
-
+    
 	#region HeroController Methods Copy Paste for Gravity Flip
-
-	private bool OnHeroControllerCheckTouchingGround(On.HeroController.orig_CheckTouchingGround orig, HeroController self)
+	
+	/*
+private void OnHCDash(On.HeroController.orig_Dash orig, HeroController self)
 	{
-		Vector2 vector = new Vector2(col2d.bounds.min.x, col2d.bounds.center.y);
-		Vector2 vector2 = col2d.bounds.center;
-		Vector2 vector3 = new Vector2(col2d.bounds.max.x, col2d.bounds.center.y);
-		float distance = col2d.bounds.extents.y + 0.16f;
-		Debug.DrawRay(vector, isUpsideDown ? Vector2.up : Vector2.down, Color.yellow);
-		Debug.DrawRay(vector2, isUpsideDown ? Vector2.up : Vector2.down, Color.yellow);
-		Debug.DrawRay(vector3, isUpsideDown ? Vector2.up : Vector2.down, Color.yellow);
-		RaycastHit2D raycastHit2D = Physics2D.Raycast(vector, isUpsideDown ? Vector2.up : Vector2.down, distance, 256);
-		RaycastHit2D raycastHit2D2 =
-			Physics2D.Raycast(vector2, isUpsideDown ? Vector2.up : Vector2.down, distance, 256);
-		RaycastHit2D raycastHit2D3 =
-			Physics2D.Raycast(vector3, isUpsideDown ? Vector2.up : Vector2.down, distance, 256);
-		return raycastHit2D.collider != null || raycastHit2D2.collider != null || raycastHit2D3.collider != null;
+		self.AffectedByGravity(false);
+		self.ResetHardLandingTimer();
+		if ((double) self.Get<float>("dash_timer") > (double) self.DASH_TIME)
+		{
+			self.CallMethod("FinishedDashing",null);
+		}
+		else
+		{
+			this.rb2d.velocity = OrigDashVector();
+			self.Add("dash_timer", Time.deltaTime);
+		}
 	}
+
+	private Vector2 OrigDashVector()
+	{
+		float x = !HC.playerData.equippedCharm_16 || !HC.cState.shadowDashing ? HC.DASH_SPEED : HC.DASH_SPEED_SHARP;
+		
+		if (GravityHandler.IsVertical())
+			return !HC.dashingDown ? (!HC.cState.facingRight ? (!HC.CheckForBump(CollisionSide.left) ? new Vector2(-x, 0.0f) : new Vector2(-x, !HC.cState.onGround ? 5f : 4f)) : (!HC.CheckForBump(CollisionSide.right) ? new Vector2(x, 0.0f) : new Vector2(x, !HC.cState.onGround ? 5f : 4f))) : new Vector2(0.0f, -x);
+		else
+			return !HC.dashingDown ? (!HC.cState.facingRight ? (!HC.CheckForBump(CollisionSide.left) ? new Vector2(0.0f, -x) : new Vector2(!HC.cState.onGround ? 5f : 4f, -x)) : (!HC.CheckForBump(CollisionSide.right) ? new Vector2(0.0f,x) : new Vector2(!HC.cState.onGround ? 5f : 4f, x))) : new Vector2(-x,0.0f);
+	}
+
+	private void OnHCDoubleJump(On.HeroController.orig_DoubleJump orig, HeroController self)
+	{
+		if (self.Get<int>("doubleJump_steps") <= self.DOUBLE_JUMP_STEPS)
+		{
+			if (self.Get<int>("doubleJump_steps") > 3)
+				rb2d.velocity =
+					new Vector2(rb2d.velocity.x, self.JUMP_SPEED * 1.1f).FlipX_YWithOverrideNewY(GravityHandler.IsHorizontal(),rb2d.velocity.y);
+			self.Increment("doubleJump_steps");
+		}
+		else
+			self.CallMethod("CancelDoubleJump",null);
+		if (!self.cState.onGround)
+			return;
+		self.CallMethod("CancelDoubleJump",null);
+	}
+
+	private void OnHCJump(On.HeroController.orig_Jump orig, HeroController self)
+	{
+		if (self.Get<int>("jump_steps") <= self.JUMP_STEPS)
+		{
+			rb2d.velocity = !self.inAcid
+				? GravityHandler.GiveUpwardVelocity(rb2d, self.JUMP_SPEED)
+				: GravityHandler.GiveUpwardVelocity(rb2d, self.JUMP_SPEED_UNDERWATER); 
+			self.Increment("jump_steps");
+			self.Increment("jumped_steps");
+			self.Set("ledgeBufferSteps", 0);
+		}
+		else
+			self.CallMethod("CancelJump", null);
+	}
+
+	private void OnHCMove(On.HeroController.orig_Move orig, HeroController self, float move_direction)
+	{
+		if (self.cState.onGround)
+			self.CallMethod("SetState", new object []{ActorStates.grounded});
+		if (!self.acceptingInput || self.cState.wallSliding)
+			return;
+		if (self.cState.inWalkZone)
+			rb2d.velocity = GravityHandler.IsVertical()
+				? new Vector2(move_direction * self.WALK_SPEED, rb2d.velocity.y)
+				: new Vector2(rb2d.velocity.x, move_direction * -self.WALK_SPEED);
+		else if (self.inAcid)
+			rb2d.velocity = GravityHandler.IsVertical()
+				? new Vector2(move_direction * self.UNDERWATER_SPEED, rb2d.velocity.y)
+				: new Vector2(rb2d.velocity.x, move_direction * -self.UNDERWATER_SPEED);
+		else if (self.playerData.GetBool("equippedCharm_37") && self.cState.onGround &&
+		         self.playerData.GetBool("equippedCharm_31"))
+			rb2d.velocity = GravityHandler.IsVertical()
+					? new Vector2(move_direction * self.RUN_SPEED_CH_COMBO, rb2d.velocity.y)
+					: new Vector2(rb2d.velocity.x, move_direction * -self.RUN_SPEED_CH_COMBO);
+		else if (self.playerData.GetBool("equippedCharm_37") && self.cState.onGround)
+				rb2d.velocity = GravityHandler.IsVertical()
+					? new Vector2(move_direction * self.RUN_SPEED_CH, rb2d.velocity.y)
+					: new Vector2(rb2d.velocity.x, move_direction * -self.RUN_SPEED_CH);
+		else
+			rb2d.velocity = GravityHandler.IsVertical()
+				? new Vector2(move_direction * self.RUN_SPEED, rb2d.velocity.y)
+				: new Vector2(rb2d.velocity.x, move_direction * -self.RUN_SPEED);
+	}
+	
 
 	private void OnHeroControllerFixedUpdate(On.HeroController.orig_FixedUpdate orig, HeroController self)
 	{
@@ -295,11 +276,13 @@ public class GravityChanger : MonoBehaviour
 			{
 				if (self.Get<bool>("wallJumpedR"))
 				{
-					rb2d.velocity = new Vector2(self.Get<float>("currentWalljumpSpeed"), rb2d.velocity.y);
+					rb2d.velocity = GravityHandler.IsVertical() ? new Vector2(self.Get<float>("currentWalljumpSpeed"), rb2d.velocity.y):
+						new Vector2(rb2d.velocity.x,self.Get<float>("currentWalljumpSpeed"));
 				}
 				else if (self.Get<bool>("wallJumpedL"))
 				{
-					rb2d.velocity = new Vector2(-self.Get<float>("currentWalljumpSpeed"), rb2d.velocity.y);
+					rb2d.velocity = GravityHandler.IsVertical() ? new Vector2(-self.Get<float>("currentWalljumpSpeed"), rb2d.velocity.y):
+						new Vector2(rb2d.velocity.x,-self.Get<float>("currentWalljumpSpeed"));
 				}
 
 				self.Increment("wallLockSteps");
@@ -350,10 +333,12 @@ public class GravityChanger : MonoBehaviour
 			}
 		}
 
-		if (Mathf.Abs(rb2d.velocity.y) > Mathf.Abs(self.MAX_FALL_VELOCITY) && !self.inAcid &&
-		    !self.controlReqlinquished && !self.cState.shadowDashing && !self.cState.spellQuake)
+		if ( 
+			(GravityHandler.IsVertical() ? Mathf.Abs(rb2d.velocity.y) : Mathf.Abs(rb2d.velocity.x)) > Mathf.Abs(self.MAX_FALL_VELOCITY)
+			&& !self.inAcid && !self.controlReqlinquished && !self.cState.shadowDashing && !self.cState.spellQuake)
 		{
-			rb2d.velocity = new Vector2(rb2d.velocity.x, -self.MAX_FALL_VELOCITY);
+			rb2d.velocity = GravityHandler.IsVertical() ? new Vector2(rb2d.velocity.x, -self.MAX_FALL_VELOCITY):
+				new Vector2(-self.MAX_FALL_VELOCITY,rb2d.velocity.y);
 		}
 
 		if (self.Get<bool>("jumpQueuing"))
@@ -378,21 +363,27 @@ public class GravityChanger : MonoBehaviour
 
 		if (self.cState.wallSliding && !self.cState.onConveyorV)
 		{
-			if (Mathf.Abs(rb2d.velocity.y) < Mathf.Abs(self.WALLSLIDE_SPEED))
+			if ((GravityHandler.IsVertical() ? Mathf.Abs(rb2d.velocity.y): Mathf.Abs(rb2d.velocity.x)) < Mathf.Abs(self.WALLSLIDE_SPEED))
 			{
-				rb2d.velocity = new Vector3(rb2d.velocity.x, rb2d.velocity.y - self.WALLSLIDE_DECEL);
-				if (Mathf.Abs(rb2d.velocity.y) > Mathf.Abs(self.WALLSLIDE_SPEED))
+				rb2d.velocity =  GravityHandler.IsVertical() ? new Vector3(rb2d.velocity.x, rb2d.velocity.y - self.WALLSLIDE_DECEL):
+					new Vector3(rb2d.velocity.x - self.WALLSLIDE_DECEL, rb2d.velocity.y);
+				
+				if (GravityHandler.IsVertical() ? Mathf.Abs(rb2d.velocity.y) > Mathf.Abs(self.WALLSLIDE_SPEED) : Mathf.Abs(rb2d.velocity.x) > Mathf.Abs(self.WALLSLIDE_SPEED))
 				{
-					rb2d.velocity = new Vector3(rb2d.velocity.x, self.WALLSLIDE_SPEED);
+					rb2d.velocity =  GravityHandler.IsVertical() ? new Vector3(rb2d.velocity.x, self.WALLSLIDE_SPEED):
+						new Vector3(self.WALLSLIDE_SPEED, rb2d.velocity.x);
 				}
 			}
 
-			if (Mathf.Abs(rb2d.velocity.y) > Mathf.Abs(self.WALLSLIDE_SPEED))
+			if ((GravityHandler.IsVertical() ? Mathf.Abs(rb2d.velocity.y): Mathf.Abs(rb2d.velocity.x))> Mathf.Abs(self.WALLSLIDE_SPEED) )
 			{
-				rb2d.velocity = new Vector3(rb2d.velocity.x, rb2d.velocity.y + self.WALLSLIDE_DECEL);
-				if (Mathf.Abs(rb2d.velocity.y) > Mathf.Abs(self.WALLSLIDE_SPEED))
+				rb2d.velocity =  GravityHandler.IsVertical() ? new Vector3(rb2d.velocity.x, rb2d.velocity.y + self.WALLSLIDE_DECEL):
+					new Vector3(rb2d.velocity.x + self.WALLSLIDE_DECEL, rb2d.velocity.y);
+				
+				if ((GravityHandler.IsVertical() ? Mathf.Abs(rb2d.velocity.y) : Mathf.Abs(rb2d.velocity.x)) > Mathf.Abs(self.WALLSLIDE_SPEED))
 				{
-					rb2d.velocity = new Vector3(rb2d.velocity.x, self.WALLSLIDE_SPEED);
+					rb2d.velocity =  GravityHandler.IsVertical() ? new Vector3(rb2d.velocity.x, self.WALLSLIDE_SPEED) :
+							new Vector3(self.WALLSLIDE_SPEED, rb2d.velocity.y);
 				}
 			}
 		}
@@ -401,24 +392,27 @@ public class GravityChanger : MonoBehaviour
 		{
 			if (Ih.inputActions.right.IsPressed && !Ih.inputActions.left.IsPressed)
 			{
-				rb2d.velocity = new Vector3(self.CYCLONE_HORIZONTAL_SPEED, rb2d.velocity.y);
+				rb2d.velocity = GravityHandler.IsVertical() ? new Vector3(self.CYCLONE_HORIZONTAL_SPEED, rb2d.velocity.y) : new Vector3(rb2d.velocity.x, self.CYCLONE_HORIZONTAL_SPEED);
 			}
 			else if (Ih.inputActions.left.IsPressed && !Ih.inputActions.right.IsPressed)
 			{
-				rb2d.velocity = new Vector3(-self.CYCLONE_HORIZONTAL_SPEED, rb2d.velocity.y);
+				rb2d.velocity = GravityHandler.IsVertical() ? new Vector3(-self.CYCLONE_HORIZONTAL_SPEED, rb2d.velocity.y) : new Vector3(rb2d.velocity.x, -self.CYCLONE_HORIZONTAL_SPEED);
+
 			}
 			else
 			{
-				rb2d.velocity = new Vector3(0f, rb2d.velocity.y);
+				rb2d.velocity = GravityHandler.IsVertical() ? new Vector3(0f, rb2d.velocity.y) : new Vector3(rb2d.velocity.x, 0f);
 			}
 		}
 
 		if (self.cState.swimming)
 		{
-			rb2d.velocity = new Vector3(rb2d.velocity.x, rb2d.velocity.y + self.SWIM_ACCEL);
-			if (Mathf.Abs(rb2d.velocity.y) < Mathf.Abs(self.SWIM_MAX_SPEED))
+			rb2d.velocity = GravityHandler.IsVertical() ? new Vector3(rb2d.velocity.x, rb2d.velocity.y + self.SWIM_ACCEL) :
+					new Vector3(rb2d.velocity.x + self.SWIM_ACCEL, rb2d.velocity.y);
+			if ((GravityHandler.IsVertical() ? Mathf.Abs(rb2d.velocity.y) : Mathf.Abs(rb2d.velocity.x)) < Mathf.Abs(self.SWIM_MAX_SPEED))
 			{
-				rb2d.velocity = new Vector3(rb2d.velocity.x, self.SWIM_MAX_SPEED);
+				rb2d.velocity =  GravityHandler.IsVertical() ? new Vector3(rb2d.velocity.x, self.SWIM_MAX_SPEED) :
+						new Vector3(self.SWIM_MAX_SPEED, rb2d.velocity.y);
 			}
 		}
 
@@ -486,9 +480,19 @@ public class GravityChanger : MonoBehaviour
 		{
 			self.CallMethod("CancelJump", null);
 			self.CallMethod("CancelDoubleJump", null);
-			if (rb2d.velocity.y.RelativeYComparison(isUpsideDown))
+			if (GravityHandler.IsVertical())
 			{
-				rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
+				if (rb2d.velocity.y.RelativeYComparison(GravityHandler.isUp()))
+				{
+					rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
+				}
+			}
+			else
+			{
+				if (rb2d.velocity.x.RelativeYComparison(GravityHandler.isLeft()))
+				{
+					rb2d.velocity = new Vector2(0f, rb2d.velocity.y);
+				}
 			}
 		}
 	}
@@ -498,13 +502,24 @@ public class GravityChanger : MonoBehaviour
 		       !self.cState.backDashing &&
 		       (!self.cState.attacking || self.Get<float>("attack_time") >= self.ATTACK_RECOVERY_TIME) &&
 		       !self.controlReqlinquished && !self.cState.hazardDeath &&
-		       rb2d.velocity.y.RelativeYComparison(isUpsideDown,-0.1f) &&
+		       (GravityHandler.IsVertical() ? rb2d.velocity.y.RelativeYComparison(GravityHandler.isUp(),-0.1f) :
+			       rb2d.velocity.x.RelativeYComparison(GravityHandler.isLeft(),-0.1f))&&
 		       !self.cState.hazardRespawning && !self.cState.recoilFrozen && !self.cState.recoiling &&
 		       !self.cState.transitioning && self.playerData.GetBool("hasDreamNail") && self.cState.onGround;
 	}
 	private void OnHeroControllerFallCheck(On.HeroController.orig_FallCheck orig, HeroController self)
 	{
-		if ( rb2d.velocity.y <= (isUpsideDown ? 1E-06f :-1E-06f))
+		bool flag;
+		if (GravityHandler.IsVertical())
+		{
+			flag = rb2d.velocity.y <= (GravityHandler.isUp() ? 1E-06f : -1E-06f);
+		}
+		else
+		{
+			flag = rb2d.velocity.x <= (GravityHandler.isLeft() ? 1E-06f : -1E-06f);
+		}
+
+		if (flag)
 		{
 			if (!self.CheckTouchingGround())
 			{
@@ -563,7 +578,9 @@ public class GravityChanger : MonoBehaviour
 	}
 	private void OnHeroControllerJumpReleased(On.HeroController.orig_JumpReleased orig, HeroController self)
 	{
-		if (rb2d.velocity.y.RelativeYComparison(isUpsideDown) && self.Get<int>("jumped_steps") >= self.JUMP_STEPS_MIN && !self.inAcid &&
+		if (
+			(GravityHandler.IsVertical() ? rb2d.velocity.y.RelativeYComparison(GravityHandler.isUp()) : rb2d.velocity.x.RelativeYComparison(GravityHandler.isLeft())) 
+			&& self.Get<int>("jumped_steps") >= self.JUMP_STEPS_MIN && !self.inAcid &&
 		    !self.cState.shroomBouncing)
 		{
 			if (self.Get<bool>("jumpReleaseQueueingEnabled"))
@@ -590,68 +607,69 @@ public class GravityChanger : MonoBehaviour
 			self.cState.swimming = false;
 		}
 	}
-	private bool OnHeroControllerCheckForBump(On.HeroController.orig_CheckForBump orig, HeroController self,
-		CollisionSide side)
+	private bool OnHeroControllerCheckForBump(On.HeroController.orig_CheckForBump orig, HeroController self, CollisionSide side)
 	{
-		float numDown = 0.025f * (isUpsideDown ? -1 : 1);
-		float numUp = 0.2f * (isUpsideDown ? -1 : 1);
-		float yCheck = isUpsideDown ? -col2d.bounds.max.y : col2d.bounds.min.y;
-		float num2 = 0.2f;
-		Vector2 vector = new Vector2(col2d.bounds.min.x + num2, yCheck + numUp);
-		Vector2 vector2 = new Vector2(col2d.bounds.min.x + num2, yCheck - numDown);
-		Vector2 vector3 = new Vector2(col2d.bounds.max.x - num2, yCheck + numUp);
-		Vector2 vector4 = new Vector2(col2d.bounds.max.x - num2, yCheck - numDown);
-		float num3 = 0.32f + num2;
-		RaycastHit2D raycastHit2D = default(RaycastHit2D);
-		RaycastHit2D raycastHit2D2 = default(RaycastHit2D);
-		if (side == CollisionSide.left)
-		{
-			Debug.DrawLine(vector2, vector2 + Vector2.left * num3, Color.cyan, 0.15f);
-			Debug.DrawLine(vector, vector + Vector2.left * num3, Color.cyan, 0.15f);
-			raycastHit2D2 = Physics2D.Raycast(vector2, Vector2.left, num3, 256);
-			raycastHit2D = Physics2D.Raycast(vector, Vector2.left, num3, 256);
-		}
-		else if (side == CollisionSide.right)
-		{
-			Debug.DrawLine(vector4, vector4 + Vector2.right * num3, Color.cyan, 0.15f);
-			Debug.DrawLine(vector3, vector3 + Vector2.right * num3, Color.cyan, 0.15f);
-			raycastHit2D2 = Physics2D.Raycast(vector4, Vector2.right, num3, 256);
-			raycastHit2D = Physics2D.Raycast(vector3, Vector2.right, num3, 256);
-		}
-		else
-		{
-			Debug.LogError("Invalid CollisionSide specified.");
-		}
-
-		if (raycastHit2D2.collider != null && raycastHit2D.collider == null)
-		{
-			Vector2 down = isUpsideDown ? Vector2.up : Vector2.down;
-			Vector2 vector5 = raycastHit2D2.point + new Vector2((side != CollisionSide.right) ? -0.1f : 0.1f, 1f);
-			RaycastHit2D raycastHit2D3 = Physics2D.Raycast(vector5, down, 1.5f, 256);
-			Vector2 vector6 = raycastHit2D2.point + new Vector2((side != CollisionSide.right) ? 0.1f : -0.1f, 1f);
-			RaycastHit2D raycastHit2D4 = Physics2D.Raycast(vector6, down, 1.5f, 256);
-			if (raycastHit2D3.collider != null)
+		bool isUpsideDown = GravityHandler.isUp();
+			float numDown = 0.025f * (isUpsideDown ? -1 : 1);
+			float numUp = 0.2f * (isUpsideDown ? -1 : 1);
+			float yCheck = isUpsideDown ? -col2d.bounds.max.y : col2d.bounds.min.y;
+			float num2 = 0.2f;
+			Vector2 vector = new Vector2(col2d.bounds.min.x + num2, yCheck + numUp);
+			Vector2 vector2 = new Vector2(col2d.bounds.min.x + num2, yCheck - numDown);
+			Vector2 vector3 = new Vector2(col2d.bounds.max.x - num2, yCheck + numUp);
+			Vector2 vector4 = new Vector2(col2d.bounds.max.x - num2, yCheck - numDown);
+			float num3 = 0.32f + num2;
+			RaycastHit2D raycastHit2D = default(RaycastHit2D);
+			RaycastHit2D raycastHit2D2 = default(RaycastHit2D);
+			if (side == CollisionSide.left)
 			{
-				Debug.DrawLine(vector5, raycastHit2D3.point, Color.cyan, 0.15f);
-				if (!(raycastHit2D4.collider != null))
-				{
-					return true;
-				}
+				Debug.DrawLine(vector2, vector2 + Vector2.left * num3, Color.cyan, 0.15f);
+				Debug.DrawLine(vector, vector + Vector2.left * num3, Color.cyan, 0.15f);
+				raycastHit2D2 = Physics2D.Raycast(vector2, Vector2.left, num3, 256);
+				raycastHit2D = Physics2D.Raycast(vector, Vector2.left, num3, 256);
+			}
+			else if (side == CollisionSide.right)
+			{
+				Debug.DrawLine(vector4, vector4 + Vector2.right * num3, Color.cyan, 0.15f);
+				Debug.DrawLine(vector3, vector3 + Vector2.right * num3, Color.cyan, 0.15f);
+				raycastHit2D2 = Physics2D.Raycast(vector4, Vector2.right, num3, 256);
+				raycastHit2D = Physics2D.Raycast(vector3, Vector2.right, num3, 256);
+			}
+			else
+			{
+				Debug.LogError("Invalid CollisionSide specified.");
+			}
 
-				Debug.DrawLine(vector6, raycastHit2D4.point, Color.cyan, 0.15f);
-				float num4 = raycastHit2D3.point.y - raycastHit2D4.point.y;
-				if (num4 > 0f)
+			if (raycastHit2D2.collider != null && raycastHit2D.collider == null)
+			{
+				Vector2 down = GravityHandler.getDirection();
+				Vector2 vector5 = raycastHit2D2.point + new Vector2((side != CollisionSide.right) ? -0.1f : 0.1f, 1f);
+				RaycastHit2D raycastHit2D3 = Physics2D.Raycast(vector5, down, 1.5f, 256);
+				Vector2 vector6 = raycastHit2D2.point + new Vector2((side != CollisionSide.right) ? 0.1f : -0.1f, 1f);
+				RaycastHit2D raycastHit2D4 = Physics2D.Raycast(vector6, down, 1.5f, 256);
+				if (raycastHit2D3.collider != null)
 				{
-					Debug.Log("Bump Height: " + num4);
-					return true;
+					Debug.DrawLine(vector5, raycastHit2D3.point, Color.cyan, 0.15f);
+					if (!(raycastHit2D4.collider != null))
+					{
+						return true;
+					}
+
+					Debug.DrawLine(vector6, raycastHit2D4.point, Color.cyan, 0.15f);
+					float num4 = raycastHit2D3.point.y - raycastHit2D4.point.y;
+					if (num4 > 0f)
+					{
+						Debug.Log("Bump Height: " + num4);
+						return true;
+					}
 				}
 			}
-		}
 
-		return false;
+			return false;
 	}
 	private bool OnHeroControllerCheckNearRoof(On.HeroController.orig_CheckNearRoof orig, HeroController self)
 	{
+		bool isUpsideDown = GravityHandler.isUp();
 		Vector2 origin = new Vector2(col2d.bounds.max.x, (isUpsideDown ? col2d.bounds.min : col2d.bounds.max).y);
 		Vector2 origin2 = new Vector2(col2d.bounds.min.x, (isUpsideDown ? col2d.bounds.min : col2d.bounds.max).y);
 		Vector2 vector = new Vector2(col2d.bounds.center.x,
@@ -669,11 +687,6 @@ public class GravityChanger : MonoBehaviour
 		RaycastHit2D raycastHit2D4 = Physics2D.Raycast(origin4, up, 1f, 256);
 		return raycastHit2D.collider != null || raycastHit2D2.collider != null || raycastHit2D3.collider != null ||
 		       raycastHit2D4.collider != null;
-	}
+	}*/
 	#endregion
-
-	private void Log(object message)
-	{
-		RandomGravityChange.Instance.Log(message);
-	}
 }
