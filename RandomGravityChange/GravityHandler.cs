@@ -1,7 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Logger = Modding.Logger;
-
-namespace RandomGravityChange;
+﻿namespace RandomGravityChange;
 
 public enum Gravity
 {
@@ -14,7 +11,7 @@ public enum Gravity
 public class GravityHandler
 {
     public Gravity _Gravity = Gravity.Down;
-    public const float GVALUE = 60;
+    private const float GVALUE = 60;
 
     public Vector2 GetNewGravity()
     {
@@ -41,49 +38,6 @@ public class GravityHandler
     public bool isRight() => _Gravity == Gravity.Right;
 
     public bool isNegativeSide() => isUp() || isRight();
-
-    public Vector2 GiveUpwardVelocity(Rigidbody2D rb2d, float speed)
-    {
-        return _Gravity switch
-        {
-            Gravity.Up => rb2d.velocity.Y(-speed),
-            Gravity.Left => rb2d.velocity.X(speed),
-            Gravity.Right => rb2d.velocity.X(-speed),
-            _ => rb2d.velocity.Y(speed)
-        };
-    }
-    public Vector2 GiveDownwardVelocity(Rigidbody2D rb2d, float speed)
-    {
-        return _Gravity switch
-        {
-            Gravity.Up => rb2d.velocity.Y(speed),
-            Gravity.Left => rb2d.velocity.X(-speed),
-            Gravity.Right => rb2d.velocity.X(speed),
-            _ => rb2d.velocity.Y(-speed)
-        };
-    }
-    public Vector2 GiveRightwardVelocity(Rigidbody2D rb2d, float speed)
-    {
-        return _Gravity switch
-        {
-            Gravity.Up => rb2d.velocity.X(-speed),
-            Gravity.Left => rb2d.velocity.Y(speed),
-            Gravity.Right => rb2d.velocity.Y(-speed),
-            _ => rb2d.velocity.X(speed)
-        };
-    }
-    public Vector2 GiveLeftwardVelocity(Rigidbody2D rb2d, float speed)
-    {
-        return _Gravity switch
-        {
-            Gravity.Up => rb2d.velocity.X(speed),
-            Gravity.Left => rb2d.velocity.Y(-speed),
-            Gravity.Right => rb2d.velocity.Y(speed),
-            _ => rb2d.velocity.X(-speed)
-        };
-    }
-    
-
     public Vector2 getDirection()
     {
         return _Gravity switch
