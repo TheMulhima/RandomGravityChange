@@ -55,27 +55,27 @@ public partial class GravityChanger
 	public void UnHookHooks()
 	{
 		//change dash velocity
-		ModHooks.DashVectorHook += GetNewVelocity;
+		ModHooks.DashVectorHook -= GetNewVelocity;
         
 		//some methods to override because it is too hard to IL hook
-		On.HeroController.CanDreamNail += OnHCCanDreamNail;
-		On.HeroController.FallCheck += OnHCFallCheck;
-		On.HeroController.JumpReleased += OnHCJumpReleased;
-		On.HeroController.CheckForBump += OnHCCheckForBump;
-		On.HeroController.CheckNearRoof += OnHCCheckNearRoof;
-		On.HeroController.CheckTouchingGround += OnHCCheckTouchingGround;
-		On.HeroController.CheckStillTouchingWall += OnHCCheckStillTouchingWall;
-		On.HeroController.FindCollisionDirection += OnHCFindCollisionDirection;
-		On.HeroController.Move += OnHCMove;
+		On.HeroController.CanDreamNail -= OnHCCanDreamNail;
+		On.HeroController.FallCheck -= OnHCFallCheck;
+		On.HeroController.JumpReleased -= OnHCJumpReleased;
+		On.HeroController.CheckForBump -= OnHCCheckForBump;
+		On.HeroController.CheckNearRoof -= OnHCCheckNearRoof;
+		On.HeroController.CheckTouchingGround -= OnHCCheckTouchingGround;
+		On.HeroController.CheckStillTouchingWall -= OnHCCheckStillTouchingWall;
+		On.HeroController.FindCollisionDirection -= OnHCFindCollisionDirection;
+		On.HeroController.Move -= OnHCMove;
 
 		//change some conditions i dont like
-		IL.HeroController.FixedUpdate += ILHCFixedUpdate;
-		IL.HeroController.FailSafeChecks += ILHCFailSafeChecks;
+		IL.HeroController.FixedUpdate -= ILHCFixedUpdate;
+		IL.HeroController.FailSafeChecks -= ILHCFailSafeChecks;
 
 		//Hook all methods that i want to change velocity of
-		IL.HeroController.DoubleJump += ChangeVelocity;
-		IL.HeroController.Jump += ChangeVelocity;
-		IL.HeroController.FixedUpdate += ChangeVelocity;
+		IL.HeroController.DoubleJump -= ChangeVelocity;
+		IL.HeroController.Jump -= ChangeVelocity;
+		IL.HeroController.FixedUpdate -= ChangeVelocity;
 		IL.HeroController.CancelHeroJump -= ChangeVelocity;
 		IL.HeroController.JumpReleased -= ChangeVelocity;
 		IL.HeroController.TakeDamage -= ChangeVelocity;

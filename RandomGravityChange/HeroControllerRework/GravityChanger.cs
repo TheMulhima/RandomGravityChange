@@ -19,8 +19,7 @@ public partial class GravityChanger : MonoBehaviour
 	public void OnDestroy()
 	{
 		UnHookHooks();
-		GravityHandler._Gravity = Gravity.Down;
-		Log("NOO MY HC IS DEAD");
+		Switch(Gravity.Down);
 	}
 
 	public void OnEnable()
@@ -32,7 +31,6 @@ public partial class GravityChanger : MonoBehaviour
 
 	public void OnDisable()
 	{
-		Log("Disabling HC");
 		HC = null;
 		rb2d = null;
 		col2d = null;
@@ -96,7 +94,10 @@ public partial class GravityChanger : MonoBehaviour
 
 	 public Vector2 GetNewVelocity(Vector2 oldVec)
 	 {
-
+		 //this needs to be checked for because when the x and y are swapped, I have to make sure
+		 //the velocity is not given in wrong direction
+		 //example: for jumping rb2d.velocity.x isnt changed but rb2d.velocity.y is for normal gravity
+		 //but for left/right we need to change rb2d.velocity.x and keep y same
 		 bool XChanged = oldVec.x != rb2d.velocity.x;
 		 bool YChanged = oldVec.y != rb2d.velocity.y;
 

@@ -47,7 +47,11 @@ public class TimedGravityChange : MonoBehaviour
             if (timer > RandomGravityChange.settings.teleportTime)
             {
                 timer = 0f;
-                RandomGravityChange.Instance.GravityChanger.Switch((Gravity)UnityEngine.Random.Range(0, 4));
+                int newGravity = UnityEngine.Random.Range(0, 4);
+                newGravity = newGravity == (int)RandomGravityChange.GravityHandler._Gravity
+                    ? newGravity + 1
+                    : newGravity;
+                RandomGravityChange.Instance.GravityChanger.Switch((Gravity)newGravity);
             }
         }
     }

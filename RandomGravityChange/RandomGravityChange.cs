@@ -22,7 +22,17 @@ public class RandomGravityChange : Mod, IGlobalSettings<GlobalSettings>, ICustom
         
         Instance ??= this;
         On.HeroController.Awake += AttachGravityHandler;
-        ModHooks.HeroUpdateHook += () => { };
+        ModHooks.SetPlayerBoolHook += SetGravityToDown;
+    }
+
+    private bool SetGravityToDown(string name, bool orig)
+    {
+        if (name == "atBench" && orig == false)
+        {
+            GravityChanger.Switch(Gravity.Down);
+        }
+
+        return orig;
     }
 
     private void AttachGravityHandler(On.HeroController.orig_Awake orig, HeroController self)

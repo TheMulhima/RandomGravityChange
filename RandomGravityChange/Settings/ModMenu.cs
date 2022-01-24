@@ -28,7 +28,8 @@ public static class ModMenu
                     },
                     () => (RandomGravityChange.settings.teleportTime / 20) - 1, Id: "teleportTime"),
             
-            new KeyBind("Random Gravity Change Key", RandomGravityChange.settings.keybinds.keyGravityChange)
+            new KeyBind("Gravity Change Key", RandomGravityChange.settings.keybinds.keyGravityChange),
+            new TextPanel("To use the above keybind, press it and within 2 seconds press the desired direction of the arrow key to change gravity to that.")
         });
         
         return MenuRef.GetMenuScreen(modListMenu);
