@@ -44,7 +44,8 @@ public class TimedGravityChange : MonoBehaviour
         if (!TimerShouldBePaused())
         {
             timer += Time.deltaTime;
-            if (timer > RandomGravityChange.settings.teleportTime)
+            if (RandomGravityChange.settings.teleportTime != 0 && 
+                timer > RandomGravityChange.settings.teleportTime)
             {
                 timer = 0f;
                 int newGravity = UnityEngine.Random.Range(0, 4);
@@ -58,7 +59,10 @@ public class TimedGravityChange : MonoBehaviour
 
     private void ManageDisplayTimer()
     {
-        if (GameManager.instance.GetSceneNameString() != "Menu_Title" && GameManager.instance.IsGameplayScene() && RandomGravityChange.settings.showTimer)
+        if (GameManager.instance.GetSceneNameString() != "Menu_Title" && 
+            GameManager.instance.IsGameplayScene() && 
+            RandomGravityChange.settings.showTimer &&
+            RandomGravityChange.settings.teleportTime != 0)
         {
             displayTimer.Text =
                 $"Time remaining: {((int)(RandomGravityChange.settings.teleportTime - timer) / 60).ToString()}:{((int)(RandomGravityChange.settings.teleportTime - timer) % 60).ToString("00")}";

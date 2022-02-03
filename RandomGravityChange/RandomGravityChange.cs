@@ -1,4 +1,6 @@
-﻿namespace RandomGravityChange;
+﻿using System.Diagnostics;
+
+namespace RandomGravityChange;
 public class RandomGravityChange : Mod, IGlobalSettings<GlobalSettings>, ICustomMenuMod
 {
     internal static RandomGravityChange Instance;
@@ -22,17 +24,6 @@ public class RandomGravityChange : Mod, IGlobalSettings<GlobalSettings>, ICustom
         
         Instance ??= this;
         On.HeroController.Awake += AttachGravityHandler;
-        ModHooks.SetPlayerBoolHook += SetGravityToDown;
-    }
-
-    private bool SetGravityToDown(string name, bool orig)
-    {
-        if (name == "atBench" && orig == false)
-        {
-            GravityChanger.Switch(Gravity.Down);
-        }
-
-        return orig;
     }
 
     private void AttachGravityHandler(On.HeroController.orig_Awake orig, HeroController self)
@@ -40,6 +31,7 @@ public class RandomGravityChange : Mod, IGlobalSettings<GlobalSettings>, ICustom
         orig(self);
         GravityChanger = self.gameObject.GetAddComponent<GravityChanger>();
     }
+    
 
     public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? _) => ModMenu.CreateMenuScreen(modListMenu);
     

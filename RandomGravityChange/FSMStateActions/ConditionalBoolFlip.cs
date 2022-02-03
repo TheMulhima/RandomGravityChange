@@ -18,4 +18,5 @@ public class ConditionalBoolFlip:FsmStateAction
         }
         Finish();
     }
+
 }

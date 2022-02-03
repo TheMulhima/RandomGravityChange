@@ -50,6 +50,9 @@ public partial class GravityChanger
 
 		// remove ddive transitions because it is causing problems
 		ModHooks.BeforeSceneLoadHook += StopDive;
+		
+		//make gravity down when unbenching
+		ModHooks.SetPlayerBoolHook += SetGravityToDown;
     }
 
 	public void UnHookHooks()
@@ -98,5 +101,8 @@ public partial class GravityChanger
 
 		// remove ddive transitions because it is causing problems
 		ModHooks.BeforeSceneLoadHook -= StopDive;
+		
+		//make gravity down when unbenching
+		ModHooks.SetPlayerBoolHook -= SetGravityToDown;
 	}
 }

@@ -532,4 +532,15 @@ public partial class GravityChanger
 		return arg;
 	}
 	
+	
+	private bool SetGravityToDown(string name, bool orig)
+	{
+		if (name == "atBench" && orig == false)
+		{
+			Switch(Gravity.Down);
+		}
+
+		return orig;
+	}
+	
 }

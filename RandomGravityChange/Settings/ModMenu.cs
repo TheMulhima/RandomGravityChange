@@ -18,15 +18,15 @@ public static class ModMenu
 
             new HorizontalOption("Random Gravity Change Time",
                     "Time between teleports in minutes",
-                    //generate list from 20 to 900 with 20 step increments
-                    Enumerable.Range(1, 45).Select(x => (x * 20).ToString()).ToArray(),
+                    //generate list from 0 to 900 with 20 step increments
+                    Enumerable.Range(0, 46).Select(x => (x * 20).ToString()).ToArray(),
                     s =>
                     {
-                        RandomGravityChange.settings.teleportTime = (s + 1) * 20;
+                        RandomGravityChange.settings.teleportTime = s * 20;
                         RandomGravityChange.Instance.RandomGravityChangeTriggersGo.GetComponent<TimedGravityChange>()
                             .timer = 0;
                     },
-                    () => (RandomGravityChange.settings.teleportTime / 20) - 1, Id: "teleportTime"),
+                    () => (RandomGravityChange.settings.teleportTime / 20), Id: "teleportTime"),
             
             new KeyBind("Gravity Change Key", RandomGravityChange.settings.keybinds.keyGravityChange),
             new TextPanel("To use the above keybind, press it and within 2 seconds press the desired direction of the arrow key to change gravity to that.")

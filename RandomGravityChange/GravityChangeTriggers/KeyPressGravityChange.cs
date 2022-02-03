@@ -1,5 +1,4 @@
 ﻿namespace RandomGravityChange.GravityChangeTriggers;
-
 public class KeyPressGravityChange:MonoBehaviour
 {
     private Coroutine gravityChangeCoroutine;

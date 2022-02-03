@@ -39,29 +39,36 @@ public partial class GravityChanger : MonoBehaviour
 	public void Switch(Gravity newGravity)
 	{
 		Gravity oldGravity = GravityHandler._Gravity;
-		GravityHandler._Gravity = newGravity;
-		Physics2D.gravity = GravityHandler.GetNewGravity();
 
-		var currentlocalScale = gameObject.transform.localScale;
-		var currenteulerAngles = gameObject.transform.eulerAngles;
-
-		gameObject.transform.localScale = GravityHandler.isNegativeSide()
-			? currentlocalScale.AbsY().MultiplyY(-1)
-			: currentlocalScale.AbsY();
-
-		gameObject.transform.eulerAngles =
-			GravityHandler.IsHorizontal() ? currenteulerAngles.Z(-90) : currenteulerAngles.Z(0);
-
-		if (GravityHandler.isNegativeSide() && (oldGravity is Gravity.Down or Gravity.Left) ||
-		    !GravityHandler.isNegativeSide() && (oldGravity is Gravity.Up or Gravity.Right))
+		if (oldGravity != newGravity)
 		{
-			HC.FlipSprite();
-		}
+			GravityHandler._Gravity = newGravity;
+			Physics2D.gravity = GravityHandler.GetNewGravity();
 
-		FlipEnemies();
-		ChangeDiveDirection();
-		ChangeFireballRecoilDirection();
-		ChangeSuperDashDirection();
+			var currentlocalScale = gameObject.transform.localScale;
+			var currenteulerAngles = gameObject.transform.eulerAngles;
+
+			gameObject.transform.localScale = GravityHandler.isNegativeSide()
+				? currentlocalScale.AbsY().MultiplyY(-1)
+				: currentlocalScale.AbsY();
+
+			gameObject.transform.eulerAngles =
+				GravityHandler.IsHorizontal() ? currenteulerAngles.Z(-90) : currenteulerAngles.Z(0);
+
+			if (GravityHandler.isNegativeSide() && (oldGravity is Gravity.Down or Gravity.Left) ||
+			    !GravityHandler.isNegativeSide() && (oldGravity is Gravity.Up or Gravity.Right))
+			{
+				HC.FlipSprite();
+			}
+
+			//reduce floor stucks
+			HC.transform.position += (Vector3) GravityHandler.getRelativeDirection(Vector2.up * 0.5f);
+
+			FlipEnemies();
+			ChangeDiveDirection();
+			ChangeFireballRecoilDirection();
+			ChangeSuperDashDirection();
+		}
 	}
 
 	private IEnumerator StartFlippingEnemies()
