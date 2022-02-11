@@ -4,7 +4,7 @@ public class TimedGravityChange : MonoBehaviour
 {
     public float timer = 0f;
     private LayoutRoot layout;
-    private TextObject displayTimer;
+    public TextObject displayTimer;
     private tk2dSpriteAnimator HCanimator;
 
     public void Awake()
@@ -16,8 +16,8 @@ public class TimedGravityChange : MonoBehaviour
 
             displayTimer = new TextObject(layout)
             {
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = RandomGravityChange.settings.timerHorizontalAlignment,
+                VerticalAlignment = RandomGravityChange.settings.timerVerticalAlignment,
                 FontSize = 40,
                 Font = UI.TrajanBold,
                 Text = ""
@@ -41,11 +41,12 @@ public class TimedGravityChange : MonoBehaviour
     
     private void ManageTimer()
     {
-        if (!TimerShouldBePaused())
+        if (RandomGravityChange.settings.gravityChangeTime != 0 &&
+            RandomGravityChange.settings.timerActive &&
+            !TimerShouldBePaused())
         {
             timer += Time.deltaTime;
-            if (RandomGravityChange.settings.teleportTime != 0 && 
-                timer > RandomGravityChange.settings.teleportTime)
+            if (timer > RandomGravityChange.settings.gravityChangeTime)
             {
                 timer = 0f;
                 int newGravity = UnityEngine.Random.Range(0, 4);
@@ -59,17 +60,20 @@ public class TimedGravityChange : MonoBehaviour
 
     private void ManageDisplayTimer()
     {
-        if (GameManager.instance.GetSceneNameString() != "Menu_Title" && 
+        if (GameManager.instance != null &&
+            GameManager.instance.GetSceneNameString() != "Menu_Title" && 
             GameManager.instance.IsGameplayScene() && 
             RandomGravityChange.settings.showTimer &&
-            RandomGravityChange.settings.teleportTime != 0)
+            RandomGravityChange.settings.gravityChangeTime != 0 &&
+            RandomGravityChange.settings.timerActive)
         {
+            displayTimer.Visibility = Visibility.Visible;
             displayTimer.Text =
-                $"Time remaining: {((int)(RandomGravityChange.settings.teleportTime - timer) / 60).ToString()}:{((int)(RandomGravityChange.settings.teleportTime - timer) % 60).ToString("00")}";
+                $"Time remaining: {((int)(RandomGravityChange.settings.gravityChangeTime - timer) / 60).ToString()}:{((int)(RandomGravityChange.settings.gravityChangeTime - timer) % 60).ToString("00")}";
         }
         else
         {
-            displayTimer.Text = "";
+            displayTimer.Visibility = Visibility.Hidden;
         }
     }
 
