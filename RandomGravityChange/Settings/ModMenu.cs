@@ -18,7 +18,7 @@ public static class ModMenu
     {
         List<string> horizontalPoses = new() { "Right", "Left" };
         List <string> verticalPoses = new () { "Top", "Bottom" };
-        MenuRef = new Menu("Random Gravity Change", new Element[]
+        MenuRef ??= new Menu("Random Gravity Change", new Element[]
         {
             new HorizontalOption("Timer Active", 
                 "Should a timer run and randomly change gravity you when it runs out?",
