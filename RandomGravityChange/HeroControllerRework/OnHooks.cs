@@ -101,7 +101,7 @@ public partial class GravityChanger
 			       ? RelativeComparison(HCR.rb2d.velocity.y, -0.1f)
 			       : RelativeComparison(HCR.rb2d.velocity.x, -0.1f)) &&
 		       !HCR.cState.hazardRespawning && !HCR.cState.recoilFrozen && !HCR.cState.recoiling &&
-		       !HCR.cState.transitioning && HCR.playerData.GetBool("hasDreamNail") && HCR.cState.onGround;
+		       !HCR.cState.transitioning && HCR.playerData.Reflect().hasDreamNail && HCR.cState.onGround;
 	}
 
 	public void OnHCFallCheck(On.HeroController.orig_FallCheck orig, HeroController self)
@@ -512,12 +512,12 @@ public partial class GravityChanger
 		{
 			movementSpeed = move_direction * HCR.UNDERWATER_SPEED;
 		}
-		else if (HCR.playerData.GetBool("equippedCharm_37") && HCR.cState.onGround &&
-		         HCR.playerData.GetBool("equippedCharm_31"))
+		else if (HCR.playerData.Reflect().equippedCharm_37 && HCR.cState.onGround &&
+		         HCR.playerData.Reflect().equippedCharm_31)
 		{
 			movementSpeed = move_direction * HCR.RUN_SPEED_CH_COMBO;
 		}
-		else if (HCR.playerData.GetBool("equippedCharm_37") && HCR.cState.onGround)
+		else if (HCR.playerData.Reflect().equippedCharm_37 && HCR.cState.onGround)
 		{
 			movementSpeed = move_direction * HCR.RUN_SPEED_CH;
 		}

@@ -1,4 +1,6 @@
-﻿namespace RandomGravityChange.GravityChangeTriggers;
+﻿using HKMirror;
+
+namespace RandomGravityChange.GravityChangeTriggers;
 
 public class TimedGravityChange : MonoBehaviour
 {
@@ -138,7 +140,7 @@ public class TimedGravityChange : MonoBehaviour
                 && nextScene != sceneName
             )
             || GameManager.instance.IsNonGameplayScene()
-            || PlayerData.instance.atBench
+            || PlayerDataAccess.atBench
             || CurrentAnimationisNonTeleportAnim(); //to not punish people changing charms and stuff
 
 
