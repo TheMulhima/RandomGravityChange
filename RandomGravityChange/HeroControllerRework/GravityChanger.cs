@@ -1,12 +1,11 @@
 ﻿// ReSharper disable CommentTypo
 // ReSharper disable IdentifierTypo
 
+using HKMirror;
+
 namespace RandomGravityChange;
 public partial class GravityChanger : MonoBehaviour
 {
-	public HeroController HC = null;
-	public Rigidbody2D rb2d = null;
-	public Collider2D col2d = null;
 	private GravityHandler GravityHandler;
 
 	public void Start()
@@ -20,20 +19,6 @@ public partial class GravityChanger : MonoBehaviour
 	{
 		UnHookHooks();
 		Switch(Gravity.Down);
-	}
-
-	public void OnEnable()
-	{
-		HC = gameObject.GetComponent<HeroController>();
-		rb2d = gameObject.GetComponent<Rigidbody2D>();
-		col2d = HC.Get<Collider2D>("col2d");
-	}
-
-	public void OnDisable()
-	{
-		HC = null;
-		rb2d = null;
-		col2d = null;
 	}
 
 	public void Switch(Gravity newGravity)
@@ -58,11 +43,11 @@ public partial class GravityChanger : MonoBehaviour
 			if (GravityHandler.isNegativeSide() && (oldGravity is Gravity.Down or Gravity.Left) ||
 			    !GravityHandler.isNegativeSide() && (oldGravity is Gravity.Up or Gravity.Right))
 			{
-				HC.FlipSprite();
+				HeroControllerR.FlipSprite();
 			}
 
 			//reduce floor stucks
-			HC.transform.position += (Vector3) GravityHandler.getRelativeDirection(Vector2.up * 0.5f);
+			HeroControllerR.transform.position += (Vector3) GravityHandler.getRelativeDirection(Vector2.up * 0.5f);
 
 			FlipEnemies();
 			ChangeDiveDirection();
@@ -105,8 +90,8 @@ public partial class GravityChanger : MonoBehaviour
 		 //the velocity is not given in wrong direction
 		 //example: for jumping rb2d.velocity.x isnt changed but rb2d.velocity.y is for normal gravity
 		 //but for left/right we need to change rb2d.velocity.x and keep y same
-		 bool XChanged = oldVec.x != rb2d.velocity.x;
-		 bool YChanged = oldVec.y != rb2d.velocity.y;
+		 bool XChanged = oldVec.x != HeroControllerR.rb2d.velocity.x;
+		 bool YChanged = oldVec.y != HeroControllerR.rb2d.velocity.y;
 
 		 switch (GravityHandler._Gravity)
 		 {
@@ -120,12 +105,12 @@ public partial class GravityChanger : MonoBehaviour
 
 				 if (XChanged && !YChanged)
 				 {
-					 return new Vector2(-oldVec.x, rb2d.velocity.y);
+					 return new Vector2(-oldVec.x, HeroControllerR.rb2d.velocity.y);
 				 }
 
 				 if (!XChanged && YChanged)
 				 {
-					 return new Vector2(rb2d.velocity.x, -oldVec.y);
+					 return new Vector2(HeroControllerR.rb2d.velocity.x, -oldVec.y);
 				 }
 
 				 return oldVec;
@@ -137,12 +122,12 @@ public partial class GravityChanger : MonoBehaviour
 
 				 if (XChanged && !YChanged)
 				 {
-					 return new Vector2(rb2d.velocity.x, oldVec.x);
+					 return new Vector2(HeroControllerR.rb2d.velocity.x, oldVec.x);
 				 }
 
 				 if (!XChanged && YChanged)
 				 {
-					 return new Vector2(-oldVec.y, rb2d.velocity.y);
+					 return new Vector2(-oldVec.y, HeroControllerR.rb2d.velocity.y);
 				 }
 
 				 return oldVec;
@@ -154,12 +139,12 @@ public partial class GravityChanger : MonoBehaviour
 
 				 if (XChanged && !YChanged)
 				 {
-					 return new Vector2(rb2d.velocity.x, -oldVec.x);
+					 return new Vector2(HeroControllerR.rb2d.velocity.x, -oldVec.x);
 				 }
 
 				 if (!XChanged && YChanged)
 				 {
-					 return new Vector2(oldVec.y, rb2d.velocity.y);
+					 return new Vector2(oldVec.y, HeroControllerR.rb2d.velocity.y);
 				 }
 
 				 return oldVec;

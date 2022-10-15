@@ -1,4 +1,6 @@
-﻿namespace RandomGravityChange;
+﻿using HKMirror;
+
+namespace RandomGravityChange;
 
 public partial class GravityChanger
 {
@@ -6,10 +8,10 @@ public partial class GravityChanger
 	{
 		if (GravityHandler.IsVertical())
 		{
-			Vector2 vector = new Vector2(col2d.bounds.min.x, col2d.bounds.center.y);
-			Vector2 vector2 = col2d.bounds.center;
-			Vector2 vector3 = new Vector2(col2d.bounds.max.x, col2d.bounds.center.y);
-			float distance = col2d.bounds.extents.y + 0.16f;
+			Vector2 vector = new Vector2(HeroControllerR.col2d.bounds.min.x, HeroControllerR.col2d.bounds.center.y);
+			Vector2 vector2 = HeroControllerR.col2d.bounds.center;
+			Vector2 vector3 = new Vector2(HeroControllerR.col2d.bounds.max.x, HeroControllerR.col2d.bounds.center.y);
+			float distance = HeroControllerR.col2d.bounds.extents.y + 0.16f;
 
 			RaycastHit2D raycastHit2D = Physics2D.Raycast(vector, GravityHandler.getDirection(), distance, 256);
 			RaycastHit2D raycastHit2D2 =
@@ -20,10 +22,10 @@ public partial class GravityChanger
 		}
 		else
 		{
-			Vector2 vector = new Vector2(col2d.bounds.center.x, col2d.bounds.max.y);
-			Vector2 vector2 = col2d.bounds.center;
-			Vector2 vector3 = new Vector2(col2d.bounds.center.x, col2d.bounds.min.y);
-			float distance = col2d.bounds.extents.x + 0.16f;
+			Vector2 vector = new Vector2(HeroControllerR.col2d.bounds.center.x, HeroControllerR.col2d.bounds.max.y);
+			Vector2 vector2 = HeroControllerR.col2d.bounds.center;
+			Vector2 vector3 = new Vector2(HeroControllerR.col2d.bounds.center.x, HeroControllerR.col2d.bounds.min.y);
+			float distance = HeroControllerR.col2d.bounds.extents.x + 0.16f;
 
 			RaycastHit2D raycastHit2D = Physics2D.Raycast(vector, GravityHandler.getDirection(), distance, 256);
 			RaycastHit2D raycastHit2D2 =
@@ -39,14 +41,14 @@ public partial class GravityChanger
 		bool isNegativeSide = GravityHandler.isNegativeSide();
 		if (GravityHandler.IsVertical())
 		{
-			Vector2 origin = new Vector2(col2d.bounds.max.x, (isNegativeSide ? col2d.bounds.min : col2d.bounds.max).y);
-			Vector2 origin2 = new Vector2(col2d.bounds.min.x, (isNegativeSide ? col2d.bounds.min : col2d.bounds.max).y);
-			Vector2 vector = new Vector2(col2d.bounds.center.x,
-				(isNegativeSide ? col2d.bounds.min : col2d.bounds.max).y);
-			Vector2 origin3 = new Vector2(col2d.bounds.center.x + col2d.bounds.size.x / 4f,
-				(isNegativeSide ? col2d.bounds.min : col2d.bounds.max).y);
-			Vector2 origin4 = new Vector2(col2d.bounds.center.x - col2d.bounds.size.x / 4f,
-				(isNegativeSide ? col2d.bounds.min : col2d.bounds.max).y);
+			Vector2 origin = new Vector2(HeroControllerR.col2d.bounds.max.x, (isNegativeSide ? HeroControllerR.col2d.bounds.min : HeroControllerR.col2d.bounds.max).y);
+			Vector2 origin2 = new Vector2(HeroControllerR.col2d.bounds.min.x, (isNegativeSide ? HeroControllerR.col2d.bounds.min : HeroControllerR.col2d.bounds.max).y);
+			Vector2 vector = new Vector2(HeroControllerR.col2d.bounds.center.x,
+				(isNegativeSide ? HeroControllerR.col2d.bounds.min : HeroControllerR.col2d.bounds.max).y);
+			Vector2 origin3 = new Vector2(HeroControllerR.col2d.bounds.center.x + HeroControllerR.col2d.bounds.size.x / 4f,
+				(isNegativeSide ? HeroControllerR.col2d.bounds.min : HeroControllerR.col2d.bounds.max).y);
+			Vector2 origin4 = new Vector2(HeroControllerR.col2d.bounds.center.x - HeroControllerR.col2d.bounds.size.x / 4f,
+				(isNegativeSide ? HeroControllerR.col2d.bounds.min : HeroControllerR.col2d.bounds.max).y);
 			Vector2 direction = new Vector2(-0.5f, isNegativeSide ? -1f : 1f);
 			Vector2 direction2 = new Vector2(0.5f, isNegativeSide ? -1f : 1f);
 			Vector2 up = isNegativeSide ? Vector2.down : Vector2.up;
@@ -59,18 +61,18 @@ public partial class GravityChanger
 		}
 		else
 		{
-			Vector2 origin = new Vector2(col2d.bounds.max.x, (isNegativeSide ? col2d.bounds.min : col2d.bounds.max).y);
+			Vector2 origin = new Vector2(HeroControllerR.col2d.bounds.max.x, (isNegativeSide ? HeroControllerR.col2d.bounds.min : HeroControllerR.col2d.bounds.max).y);
 
-			Vector2 origin2 = new Vector2(col2d.bounds.min.x, (isNegativeSide ? col2d.bounds.min : col2d.bounds.max).y);
+			Vector2 origin2 = new Vector2(HeroControllerR.col2d.bounds.min.x, (isNegativeSide ? HeroControllerR.col2d.bounds.min : HeroControllerR.col2d.bounds.max).y);
 
-			Vector2 vector = new Vector2(col2d.bounds.center.x,
-				(isNegativeSide ? col2d.bounds.min : col2d.bounds.max).y);
+			Vector2 vector = new Vector2(HeroControllerR.col2d.bounds.center.x,
+				(isNegativeSide ? HeroControllerR.col2d.bounds.min : HeroControllerR.col2d.bounds.max).y);
 
-			Vector2 origin3 = new Vector2(col2d.bounds.center.x + col2d.bounds.size.x / 4f,
-				(isNegativeSide ? col2d.bounds.min : col2d.bounds.max).y);
+			Vector2 origin3 = new Vector2(HeroControllerR.col2d.bounds.center.x + HeroControllerR.col2d.bounds.size.x / 4f,
+				(isNegativeSide ? HeroControllerR.col2d.bounds.min : HeroControllerR.col2d.bounds.max).y);
 
-			Vector2 origin4 = new Vector2(col2d.bounds.center.x - col2d.bounds.size.x / 4f,
-				(isNegativeSide ? col2d.bounds.min : col2d.bounds.max).y);
+			Vector2 origin4 = new Vector2(HeroControllerR.col2d.bounds.center.x - HeroControllerR.col2d.bounds.size.x / 4f,
+				(isNegativeSide ? HeroControllerR.col2d.bounds.min : HeroControllerR.col2d.bounds.max).y);
 
 			Vector2 direction = new Vector2(isNegativeSide ? -0.5f : 0.5f, 1f);
 
@@ -88,80 +90,80 @@ public partial class GravityChanger
 
 	public bool OnHCCanDreamNail(On.HeroController.orig_CanDreamNail orig, HeroController self)
 	{
-		return !GameManager.instance.isPaused && self.hero_state != ActorStates.no_input && !self.cState.dashing &&
-		       !self.cState.backDashing &&
-		       (!self.cState.attacking || self.Get<float>("attack_time") >= self.ATTACK_RECOVERY_TIME) &&
-		       !self.controlReqlinquished && !self.cState.hazardDeath &&
+		return !GameManager.instance.isPaused && HeroControllerR.hero_state != ActorStates.no_input && !HeroControllerR.cState.dashing &&
+		       !HeroControllerR.cState.backDashing &&
+		       (!HeroControllerR.cState.attacking || HeroControllerR.attack_time >= HeroControllerR.ATTACK_RECOVERY_TIME) &&
+		       !HeroControllerR.controlReqlinquished && !HeroControllerR.cState.hazardDeath &&
 		       (GravityHandler.IsVertical()
-			       ? RelativeComparison(rb2d.velocity.y, -0.1f)
-			       : RelativeComparison(rb2d.velocity.x, -0.1f)) &&
-		       !self.cState.hazardRespawning && !self.cState.recoilFrozen && !self.cState.recoiling &&
-		       !self.cState.transitioning && self.playerData.GetBool("hasDreamNail") && self.cState.onGround;
+			       ? RelativeComparison(HeroControllerR.rb2d.velocity.y, -0.1f)
+			       : RelativeComparison(HeroControllerR.rb2d.velocity.x, -0.1f)) &&
+		       !HeroControllerR.cState.hazardRespawning && !HeroControllerR.cState.recoilFrozen && !HeroControllerR.cState.recoiling &&
+		       !HeroControllerR.cState.transitioning && HeroControllerR.playerData.GetBool("hasDreamNail") && HeroControllerR.cState.onGround;
 	}
 
 	public void OnHCFallCheck(On.HeroController.orig_FallCheck orig, HeroController self)
 	{
-		if ((GravityHandler.IsVertical() ? rb2d.velocity.y : rb2d.velocity.x) <=
+		if ((GravityHandler.IsVertical() ? HeroControllerR.rb2d.velocity.y : HeroControllerR.rb2d.velocity.x) <=
 		    (GravityHandler.isNegativeSide() ? 1E-06f : -1E-06f))
 		{
-			if (!self.CheckTouchingGround())
+			if (!HeroControllerR.CheckTouchingGround())
 			{
-				self.cState.falling = true;
-				self.cState.onGround = false;
-				self.cState.wallJumping = false;
-				self.proxyFSM.SendEvent("HeroCtrl-LeftGround");
-				if (self.hero_state != ActorStates.no_input)
+				HeroControllerR.cState.falling = true;
+				HeroControllerR.cState.onGround = false;
+				HeroControllerR.cState.wallJumping = false;
+				HeroControllerR.proxyFSM.SendEvent("HeroCtrl-LeftGround");
+				if (HeroControllerR.hero_state != ActorStates.no_input)
 				{
-					self.CallMethod("SetState", new object[] { ActorStates.airborne });
+					HeroControllerR.SetState(ActorStates.airborne);
 				}
 
-				if (self.cState.wallSliding)
+				if (HeroControllerR.cState.wallSliding)
 				{
-					self.Set("fallTimer", 0f);
+					HeroControllerR.fallTimer = 0f;
 				}
 				else
 				{
-					self.Set("fallTimer", self.fallTimer + Time.deltaTime);
+					HeroControllerR.fallTimer += Time.deltaTime;
 				}
 
-				if (self.fallTimer > self.BIG_FALL_TIME)
+				if (HeroControllerR.fallTimer > HeroControllerR.BIG_FALL_TIME)
 				{
-					if (!self.cState.willHardLand)
+					if (!HeroControllerR.cState.willHardLand)
 					{
-						self.cState.willHardLand = true;
+						HeroControllerR.cState.willHardLand = true;
 					}
 
-					if (!self.Get<bool>("fallRumble"))
+					if (!HeroControllerR.fallRumble);
 					{
-						self.CallMethod("StartFallRumble", null);
+						HeroControllerR.StartFallRumble();
 					}
 				}
 
-				if (self.Get<bool>("fallCheckFlagged"))
+				if (HeroControllerR.fallCheckFlagged)
 				{
-					self.Set("fallCheckFlagged", false);
+					HeroControllerR.fallCheckFlagged = false;
 				}
 			}
 		}
 		else
 		{
-			self.cState.falling = false;
-			self.Set("fallTimer", 0.0f);
-			if (self.transitionState != HeroTransitionState.ENTERING_SCENE)
+			HeroControllerR.cState.falling = false;
+			HeroControllerR.fallTimer = 0.0f;
+			if (HeroControllerR.transitionState != HeroTransitionState.ENTERING_SCENE)
 			{
-				self.cState.willHardLand = false;
+				HeroControllerR.cState.willHardLand = false;
 			}
 
-			if (self.Get<bool>("fallCheckFlagged"))
+			if (HeroControllerR.fallCheckFlagged)
 
 			{
-				self.Set("fallCheckFlagged", false);
+				HeroControllerR.fallCheckFlagged = false;
 			}
 
-			if (self.Get<bool>("fallRumble"))
+			if (HeroControllerR.fallRumble)
 
 			{
-				self.CallMethod("CancelFallEffects", null);
+				HeroControllerR.CancelFallEffects();
 			}
 		}
 	}
@@ -169,32 +171,32 @@ public partial class GravityChanger
 	public void OnHCJumpReleased(On.HeroController.orig_JumpReleased orig, HeroController self)
 	{
 		if (
-			(GravityHandler.IsVertical() ? RelativeComparison(rb2d.velocity.y) : RelativeComparison(rb2d.velocity.x))
+			(GravityHandler.IsVertical() ? RelativeComparison(HeroControllerR.rb2d.velocity.y) : RelativeComparison(HeroControllerR.rb2d.velocity.x))
 
-			&& self.Get<int>("jumped_steps") >= self.JUMP_STEPS_MIN && !self.inAcid &&
-			!self.cState.shroomBouncing)
+			&& HeroControllerR.jumped_steps >= HeroControllerR.JUMP_STEPS_MIN && !HeroControllerR.inAcid &&
+			!HeroControllerR.cState.shroomBouncing)
 		{
-			if (self.Get<bool>("jumpReleaseQueueingEnabled"))
+			if (HeroControllerR.jumpReleaseQueueingEnabled)
 			{
-				if (self.Get<bool>("jumpReleaseQueuing") && self.Get<int>("jumpReleaseQueueSteps") <= 0)
+				if (HeroControllerR.jumpReleaseQueuing && HeroControllerR.jumpReleaseQueueSteps <= 0)
 				{
 					//dont need to do anything here cuz IL hook will handle it
-					rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
-					self.CallMethod("CancelJump", null);
+					HeroControllerR.rb2d.velocity = new Vector2(HeroControllerR.rb2d.velocity.x, 0f);
+					HeroControllerR.CancelJump();
 				}
 			}
 			else
 			{
-				rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
-				self.CallMethod("CancelJump", null);
+				HeroControllerR.rb2d.velocity = new Vector2(HeroControllerR.rb2d.velocity.x, 0f);
+				HeroControllerR.CancelJump();
 			}
 		}
 
-		self.Set("jumpQueuing", false);
-		self.Set("doubleJumpQueuing", false);
-		if (self.cState.swimming)
+		HeroControllerR.jumpQueuing = false;
+		HeroControllerR.doubleJumpQueuing = false;
+		if (HeroControllerR.cState.swimming)
 		{
-			self.cState.swimming = false;
+			HeroControllerR.cState.swimming = false;
 		}
 	}
 
@@ -207,31 +209,31 @@ public partial class GravityChanger
 		float numUp = 0.2f;
 		if (GravityHandler.isDown())
 		{
-			vector = new Vector2(col2d.bounds.min.x + num2, col2d.bounds.min.y + numUp);
-			vector2 = new Vector2(col2d.bounds.min.x + num2, col2d.bounds.min.y - numDown);
-			vector3 = new Vector2(col2d.bounds.max.x - num2, col2d.bounds.min.y + numUp);
-			vector4 = new Vector2(col2d.bounds.max.x - num2, col2d.bounds.min.y - numDown);
+			vector = new Vector2(HeroControllerR.col2d.bounds.min.x + num2, HeroControllerR.col2d.bounds.min.y + numUp);
+			vector2 = new Vector2(HeroControllerR.col2d.bounds.min.x + num2, HeroControllerR.col2d.bounds.min.y - numDown);
+			vector3 = new Vector2(HeroControllerR.col2d.bounds.max.x - num2, HeroControllerR.col2d.bounds.min.y + numUp);
+			vector4 = new Vector2(HeroControllerR.col2d.bounds.max.x - num2, HeroControllerR.col2d.bounds.min.y - numDown);
 		}
 		else if (GravityHandler.isUp())
 		{
-			vector = new Vector2(col2d.bounds.max.x - num2, col2d.bounds.max.y - numUp);
-			vector2 = new Vector2(col2d.bounds.max.x - num2, col2d.bounds.max.y + numDown);
-			vector3 = new Vector2(col2d.bounds.min.x + num2, col2d.bounds.max.y - numUp);
-			vector4 = new Vector2(col2d.bounds.min.x + num2, col2d.bounds.max.y + numDown);
+			vector = new Vector2(HeroControllerR.col2d.bounds.max.x - num2, HeroControllerR.col2d.bounds.max.y - numUp);
+			vector2 = new Vector2(HeroControllerR.col2d.bounds.max.x - num2, HeroControllerR.col2d.bounds.max.y + numDown);
+			vector3 = new Vector2(HeroControllerR.col2d.bounds.min.x + num2, HeroControllerR.col2d.bounds.max.y - numUp);
+			vector4 = new Vector2(HeroControllerR.col2d.bounds.min.x + num2, HeroControllerR.col2d.bounds.max.y + numDown);
 		}
 		else if (GravityHandler.isLeft())
 		{
-			vector = new Vector2(col2d.bounds.min.x + numUp, col2d.bounds.max.y - num2);
-			vector2 = new Vector2(col2d.bounds.min.x - numDown, col2d.bounds.max.y - num2);
-			vector3 = new Vector2(col2d.bounds.min.x + numUp, col2d.bounds.min.y + num2);
-			vector4 = new Vector2(col2d.bounds.min.x - numDown, col2d.bounds.min.y + num2);
+			vector = new Vector2(HeroControllerR.col2d.bounds.min.x + numUp, HeroControllerR.col2d.bounds.max.y - num2);
+			vector2 = new Vector2(HeroControllerR.col2d.bounds.min.x - numDown, HeroControllerR.col2d.bounds.max.y - num2);
+			vector3 = new Vector2(HeroControllerR.col2d.bounds.min.x + numUp, HeroControllerR.col2d.bounds.min.y + num2);
+			vector4 = new Vector2(HeroControllerR.col2d.bounds.min.x - numDown, HeroControllerR.col2d.bounds.min.y + num2);
 		}
 		else if (GravityHandler.isRight())
 		{
-			vector = new Vector2(col2d.bounds.max.x - numUp, col2d.bounds.min.y + num2);
-			vector2 = new Vector2(col2d.bounds.max.x + numDown, col2d.bounds.min.y + num2);
-			vector3 = new Vector2(col2d.bounds.max.x - numUp, col2d.bounds.max.y - num2);
-			vector4 = new Vector2(col2d.bounds.max.x + numDown, col2d.bounds.max.y - num2);
+			vector = new Vector2(HeroControllerR.col2d.bounds.max.x - numUp, HeroControllerR.col2d.bounds.min.y + num2);
+			vector2 = new Vector2(HeroControllerR.col2d.bounds.max.x + numDown, HeroControllerR.col2d.bounds.min.y + num2);
+			vector3 = new Vector2(HeroControllerR.col2d.bounds.max.x - numUp, HeroControllerR.col2d.bounds.max.y - num2);
+			vector4 = new Vector2(HeroControllerR.col2d.bounds.max.x + numDown, HeroControllerR.col2d.bounds.max.y - num2);
 		}
 
 		float num3 = 0.32f + num2;
@@ -367,9 +369,9 @@ public partial class GravityChanger
 	public bool OnHCCheckStillTouchingWall(On.HeroController.orig_CheckStillTouchingWall orig, HeroController self,
 		CollisionSide side, bool checkTop)
 	{
-		var min = col2d.bounds.min;
-		var max = col2d.bounds.max;
-		var center = col2d.bounds.center;
+		var min = HeroControllerR.col2d.bounds.min;
+		var max = HeroControllerR.col2d.bounds.max;
+		var center = HeroControllerR.col2d.bounds.center;
 
 		Vector2 origin = GravityHandler._Gravity switch
 		{
@@ -487,48 +489,50 @@ public partial class GravityChanger
 
 	private void OnHCMove(On.HeroController.orig_Move orig, HeroController self, float move_direction)
 	{
-		if (HC.cState.onGround)
-			HC.CallMethod("SetState", new object[] { ActorStates.grounded });
-		if (!HC.acceptingInput || HC.cState.wallSliding)
+		if (HeroControllerR.cState.onGround)
+		{
+			HeroControllerR.SetState( ActorStates.grounded);
+		}
+		if (!HeroControllerR.acceptingInput || HeroControllerR.cState.wallSliding)
 			return;
 
 		float movementSpeed;
-		if (HC.cState.inWalkZone)
+		if (HeroControllerR.cState.inWalkZone)
 		{
-			movementSpeed = move_direction * HC.WALK_SPEED;
+			movementSpeed = move_direction * HeroControllerR.WALK_SPEED;
 		}
-		else if (HC.inAcid)
+		else if (HeroControllerR.inAcid)
 		{
-			movementSpeed = move_direction * HC.UNDERWATER_SPEED;
+			movementSpeed = move_direction * HeroControllerR.UNDERWATER_SPEED;
 		}
-		else if (HC.playerData.GetBool("equippedCharm_37") && HC.cState.onGround &&
-		         HC.playerData.GetBool("equippedCharm_31"))
+		else if (HeroControllerR.playerData.GetBool("equippedCharm_37") && HeroControllerR.cState.onGround &&
+		         HeroControllerR.playerData.GetBool("equippedCharm_31"))
 		{
-			movementSpeed = move_direction * HC.RUN_SPEED_CH_COMBO;
+			movementSpeed = move_direction * HeroControllerR.RUN_SPEED_CH_COMBO;
 		}
-		else if (HC.playerData.GetBool("equippedCharm_37") && HC.cState.onGround)
+		else if (HeroControllerR.playerData.GetBool("equippedCharm_37") && HeroControllerR.cState.onGround)
 		{
-			movementSpeed = move_direction * HC.RUN_SPEED_CH;
+			movementSpeed = move_direction * HeroControllerR.RUN_SPEED_CH;
 		}
 		else
 		{
-			movementSpeed = move_direction * HC.RUN_SPEED;
+			movementSpeed = move_direction * HeroControllerR.RUN_SPEED;
 		}
 
-		rb2d.velocity = GravityHandler._Gravity switch
+		HeroControllerR.rb2d.velocity = GravityHandler._Gravity switch
 		{
-			Gravity.Up => new Vector2(-movementSpeed, rb2d.velocity.y),
-			Gravity.Left => new Vector2(rb2d.velocity.x, -movementSpeed),
-			Gravity.Right => new Vector2(rb2d.velocity.x, movementSpeed),
-			_ => new Vector2(movementSpeed, rb2d.velocity.y)
+			Gravity.Up => new Vector2(-movementSpeed, HeroControllerR.rb2d.velocity.y),
+			Gravity.Left => new Vector2(HeroControllerR.rb2d.velocity.x, -movementSpeed),
+			Gravity.Right => new Vector2(HeroControllerR.rb2d.velocity.x, movementSpeed),
+			_ => new Vector2(movementSpeed, HeroControllerR.rb2d.velocity.y)
 		};
 	}
 	
 	private string StopDive(string arg)
 	{
-		HC.spellControl.SendEvent("HERO LANDED");
-		HC.cState.spellQuake = false;
-		HC.exitedQuake = false;
+		HeroControllerR.spellControl.SendEvent("HERO LANDED");
+		HeroControllerR.cState.spellQuake = false;
+		HeroControllerR.exitedQuake = false;
 		return arg;
 	}
 	

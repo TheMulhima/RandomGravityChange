@@ -1,4 +1,6 @@
-﻿namespace RandomGravityChange;
+﻿using HKMirror;
+
+namespace RandomGravityChange;
 public partial class GravityChanger
 {
     public void ILHCFixedUpdate(ILContext il)
@@ -15,10 +17,10 @@ public partial class GravityChanger
                 //take in float as parameter and discard it because we dont need it
                 (_ => GravityHandler._Gravity switch
                 {
-                    Gravity.Up => -rb2d.velocity.y,
-                    Gravity.Left => rb2d.velocity.x,
-                    Gravity.Right => -rb2d.velocity.x,
-                    _ => rb2d.velocity.y
+                    Gravity.Up => -HeroControllerR.rb2d.velocity.y,
+                    Gravity.Left => HeroControllerR.rb2d.velocity.x,
+                    Gravity.Right => -HeroControllerR.rb2d.velocity.x,
+                    _ => HeroControllerR.rb2d.velocity.y
                 });
         }
 
@@ -45,21 +47,21 @@ public partial class GravityChanger
             {
                 void ChangeDirection()
                 {
-                    HC.FlipSprite();
-                    HC.CallMethod("CancelAttack");
+                    HeroControllerR.FlipSprite();
+                    HeroControllerR.CancelAttack();
                 }
 
                 if (GravityHandler.isNegativeSide())
                 {
-                    if (HC.move_input < 0.0 && !HC.cState.facingRight) ChangeDirection();
+                    if (HeroControllerR.move_input < 0.0 && !HeroControllerR.cState.facingRight) ChangeDirection();
 
-                    else if (HC.move_input > 0.0 && HC.cState.facingRight) ChangeDirection();
+                    else if (HeroControllerR.move_input > 0.0 && HeroControllerR.cState.facingRight) ChangeDirection();
                 }
                 else
                 {
-                    if (HC.move_input > 0.0 && !HC.cState.facingRight) ChangeDirection();
+                    if (HeroControllerR.move_input > 0.0 && !HeroControllerR.cState.facingRight) ChangeDirection();
 
-                    else if (HC.move_input < 0.0 && HC.cState.facingRight) ChangeDirection();
+                    else if (HeroControllerR.move_input < 0.0 && HeroControllerR.cState.facingRight) ChangeDirection();
                 }
             });
         }
@@ -98,7 +100,7 @@ public partial class GravityChanger
             cursor.GoToNext(2);//goto the point after the float is put onto stack
             cursor.EmitDelegate<System.Func<float, float>>(
                 //take in the float outputted by rb2d.velocity.y and discard it to replace it with the one i want
-                _ => GravityHandler.IsVertical() ? rb2d.velocity.y : rb2d.velocity.x);
+                _ => GravityHandler.IsVertical() ? HeroControllerR.rb2d.velocity.y : HeroControllerR.rb2d.velocity.x);
         }
     }
 }

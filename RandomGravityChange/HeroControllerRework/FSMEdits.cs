@@ -1,4 +1,6 @@
-﻿namespace RandomGravityChange;
+﻿using HKMirror;
+
+namespace RandomGravityChange;
 
 public partial class GravityChanger
 {
@@ -7,28 +9,28 @@ public partial class GravityChanger
         const float quakeSpeed = 50f;
         if (GravityHandler.IsVertical())
         {
-            HC.spellControl.GetAction<SetVelocity2d>("Quake Antic", 3).SetOnlyYVel(
-                HC.spellControl.FsmVariables.GetFsmFloat("Quake Antic Speed").
+            HeroControllerR.spellControl.GetAction<SetVelocity2d>("Quake Antic", 3).SetOnlyYVel(
+                HeroControllerR.spellControl.FsmVariables.GetFsmFloat("Quake Antic Speed").
                     Multiply(GravityHandler.isNegativeSide() ? -1f : 1f));
 
-            HC.spellControl.GetAction<SetVelocity2d>("Quake1 Down", 6).SetOnlyYVel(GravityHandler.isNegativeSide() ? quakeSpeed : -quakeSpeed);
-            HC.spellControl.GetAction<GetVelocity2d>("Quake1 Down", 9).GetOnlyYVel("Y Speed");
+            HeroControllerR.spellControl.GetAction<SetVelocity2d>("Quake1 Down", 6).SetOnlyYVel(GravityHandler.isNegativeSide() ? quakeSpeed : -quakeSpeed);
+            HeroControllerR.spellControl.GetAction<GetVelocity2d>("Quake1 Down", 9).GetOnlyYVel("Y Speed");
             
-            HC.spellControl.GetAction<SetVelocity2d>("Quake2 Down", 6).SetOnlyYVel(GravityHandler.isNegativeSide() ? quakeSpeed : -quakeSpeed);
-            HC.spellControl.GetAction<GetVelocity2d>("Quake2 Down", 9).GetOnlyYVel("Y Speed");
+            HeroControllerR.spellControl.GetAction<SetVelocity2d>("Quake2 Down", 6).SetOnlyYVel(GravityHandler.isNegativeSide() ? quakeSpeed : -quakeSpeed);
+            HeroControllerR.spellControl.GetAction<GetVelocity2d>("Quake2 Down", 9).GetOnlyYVel("Y Speed");
             
         }
         else
         {
-            HC.spellControl.GetAction<SetVelocity2d>("Quake Antic", 3).SetOnlyXVel(
-                HC.spellControl.FsmVariables.GetFsmFloat("Quake Antic Speed").
+            HeroControllerR.spellControl.GetAction<SetVelocity2d>("Quake Antic", 3).SetOnlyXVel(
+                HeroControllerR.spellControl.FsmVariables.GetFsmFloat("Quake Antic Speed").
                     Multiply(GravityHandler.isNegativeSide() ? -1f : 1f));
 
-            HC.spellControl.GetAction<SetVelocity2d>("Quake1 Down", 6).SetOnlyXVel(GravityHandler.isNegativeSide() ? quakeSpeed : -quakeSpeed);
-            HC.spellControl.GetAction<GetVelocity2d>("Quake1 Down", 9).GetOnlyXVel("Y Speed");
+            HeroControllerR.spellControl.GetAction<SetVelocity2d>("Quake1 Down", 6).SetOnlyXVel(GravityHandler.isNegativeSide() ? quakeSpeed : -quakeSpeed);
+            HeroControllerR.spellControl.GetAction<GetVelocity2d>("Quake1 Down", 9).GetOnlyXVel("Y Speed");
             
-            HC.spellControl.GetAction<SetVelocity2d>("Quake2 Down", 6).SetOnlyXVel(GravityHandler.isNegativeSide() ? quakeSpeed : -quakeSpeed);
-            HC.spellControl.GetAction<GetVelocity2d>("Quake2 Down", 9).GetOnlyXVel("Y Speed");
+            HeroControllerR.spellControl.GetAction<SetVelocity2d>("Quake2 Down", 6).SetOnlyXVel(GravityHandler.isNegativeSide() ? quakeSpeed : -quakeSpeed);
+            HeroControllerR.spellControl.GetAction<GetVelocity2d>("Quake2 Down", 9).GetOnlyXVel("Y Speed");
             
         }
     }
@@ -37,13 +39,13 @@ public partial class GravityChanger
     {
         if (GravityHandler.IsVertical())
         {
-            HC.spellControl.GetAction<FloatMultiply>("Fireball Recoil", 8).multiplyBy = 2f;
-            HC.spellControl.GetAction<SetVelocity2d>("Fireball Recoil",9).SetOnlyXVel("Fireball Recoil Current");
+            HeroControllerR.spellControl.GetAction<FloatMultiply>("Fireball Recoil", 8).multiplyBy = 2f;
+            HeroControllerR.spellControl.GetAction<SetVelocity2d>("Fireball Recoil",9).SetOnlyXVel("Fireball Recoil Current");
         }
         if (GravityHandler.IsHorizontal())
         {
-            HC.spellControl.GetAction<FloatMultiply>("Fireball Recoil", 8).multiplyBy = -2f;
-            HC.spellControl.GetAction<SetVelocity2d>("Fireball Recoil",9).SetOnlyYVel("Fireball Recoil Current");
+            HeroControllerR.spellControl.GetAction<FloatMultiply>("Fireball Recoil", 8).multiplyBy = -2f;
+            HeroControllerR.spellControl.GetAction<SetVelocity2d>("Fireball Recoil",9).SetOnlyYVel("Fireball Recoil Current");
         }
     }
 
@@ -159,39 +161,39 @@ public partial class GravityChanger
     {
         if (GravityHandler.IsVertical())
         {
-            HC.superDash.GetAction<GetVelocity2d>("Dashing", 5).GetOnlyXVel("Speed");
-            HC.superDash.GetAction<GetVelocity2d>("Cancelable", 3).GetOnlyXVel("Speed");
+            HeroControllerR.superDash.GetAction<GetVelocity2d>("Dashing", 5).GetOnlyXVel("Speed");
+            HeroControllerR.superDash.GetAction<GetVelocity2d>("Cancelable", 3).GetOnlyXVel("Speed");
         }
         if (GravityHandler.IsHorizontal())
         {
-            HC.superDash.GetAction<GetVelocity2d>("Dashing", 5).GetOnlyYVel("Speed");
-            HC.superDash.GetAction<GetVelocity2d>("Cancelable", 3).GetOnlyYVel("Speed");
+            HeroControllerR.superDash.GetAction<GetVelocity2d>("Dashing", 5).GetOnlyYVel("Speed");
+            HeroControllerR.superDash.GetAction<GetVelocity2d>("Cancelable", 3).GetOnlyYVel("Speed");
         }
         
-        HC.superDash.GetAction<RayCast2d>("Wall Charge", 4).direction =GravityHandler.isNegativeSide() ? Vector2.right : Vector2.left;
-        HC.superDash.GetAction<RayCast2d>("Wall Charge", 5).direction =GravityHandler.isNegativeSide() ? Vector2.right : Vector2.left;
+        HeroControllerR.superDash.GetAction<RayCast2d>("Wall Charge", 4).direction =GravityHandler.isNegativeSide() ? Vector2.right : Vector2.left;
+        HeroControllerR.superDash.GetAction<RayCast2d>("Wall Charge", 5).direction =GravityHandler.isNegativeSide() ? Vector2.right : Vector2.left;
     }
 
     private void InitialChangeSuperDashDirection()
     {
-        HC.superDash.RemoveAction("Dashing", 2);
-        HC.superDash.RemoveAction("Enter Velocity", 0);
-        HC.superDash.RemoveAction("Cancelable", 1);
-        HC.superDash.RemoveAction("Dash Start", 24);
+        HeroControllerR.superDash.RemoveAction("Dashing", 2);
+        HeroControllerR.superDash.RemoveAction("Enter Velocity", 0);
+        HeroControllerR.superDash.RemoveAction("Cancelable", 1);
+        HeroControllerR.superDash.RemoveAction("Dash Start", 24);
 
-        HC.superDash.InsertAction("Dashing",
-            new SuperDashVelocity(rb2d, HC.superDash.FsmVariables.FindFsmFloat("Current SD Speed"), true, () => GravityHandler.IsHorizontal()), 2);
+        HeroControllerR.superDash.InsertAction("Dashing",
+            new SuperDashVelocity(HeroControllerR.rb2d, HeroControllerR.superDash.FsmVariables.FindFsmFloat("Current SD Speed"), true, () => GravityHandler.IsHorizontal()), 2);
 
-        HC.superDash.InsertAction("Enter Velocity",
-            new SuperDashVelocity(rb2d, HC.superDash.FsmVariables.FindFsmFloat("Current SD Speed"), false, () => GravityHandler.IsHorizontal()), 0);
+        HeroControllerR.superDash.InsertAction("Enter Velocity",
+            new SuperDashVelocity(HeroControllerR.rb2d, HeroControllerR.superDash.FsmVariables.FindFsmFloat("Current SD Speed"), false, () => GravityHandler.IsHorizontal()), 0);
 
-        HC.superDash.InsertAction("Dash Start",
-            new SuperDashVelocity(rb2d, HC.superDash.FsmVariables.FindFsmFloat("Current SD Speed"), false, () => GravityHandler.IsHorizontal()), 24);
-        HC.superDash.InsertAction("Cancelable",
-            new SuperDashVelocity(rb2d, HC.superDash.FsmVariables.FindFsmFloat("Current SD Speed"), true, () => GravityHandler.IsHorizontal()), 2);
+        HeroControllerR.superDash.InsertAction("Dash Start",
+            new SuperDashVelocity(HeroControllerR.rb2d, HeroControllerR.superDash.FsmVariables.FindFsmFloat("Current SD Speed"), false, () => GravityHandler.IsHorizontal()), 24);
+        HeroControllerR.superDash.InsertAction("Cancelable",
+            new SuperDashVelocity(HeroControllerR.rb2d, HeroControllerR.superDash.FsmVariables.FindFsmFloat("Current SD Speed"), true, () => GravityHandler.IsHorizontal()), 2);
         
         //breaks looks but works so ¯\_(ツ)_/¯  
-        HC.superDash.InsertAction("Direction Wall", new ConditionalBoolFlip(HC.superDash.FsmVariables.FindFsmBool("Facing Right"), () => GravityHandler.isNegativeSide()), 4);
+        HeroControllerR.superDash.InsertAction("Direction Wall", new ConditionalBoolFlip(HeroControllerR.superDash.FsmVariables.FindFsmBool("Facing Right"), () => GravityHandler.isNegativeSide()), 4);
     }
 
     private void FixBench(On.PlayMakerFSM.orig_Awake orig, PlayMakerFSM self)
