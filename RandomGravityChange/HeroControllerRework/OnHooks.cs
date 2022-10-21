@@ -1,4 +1,5 @@
-﻿using HKMirror;
+﻿using HKMirror.Reflection;
+using HKMirror.Reflection.SingletonClasses;
 
 namespace RandomGravityChange;
 

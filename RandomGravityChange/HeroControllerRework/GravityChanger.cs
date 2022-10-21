@@ -1,7 +1,7 @@
 ﻿// ReSharper disable CommentTypo
 // ReSharper disable IdentifierTypo
 
-using HKMirror;
+using HKMirror.Reflection.SingletonClasses;
 
 namespace RandomGravityChange;
 public partial class GravityChanger : MonoBehaviour
